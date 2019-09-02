@@ -1,35 +1,11 @@
-# acsliderpage
+#TabsPageSlider 
 
-## Project setup
-```
-npm install
-```
+> The goal is to be a high-performance tabs component ,Resolving Mobile Gestures
 
-### Compiles and hot-reloads for development
+###使用
 ```
-npm run serve
+    npm install TabsPageSlider
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-# TabPageSlider
+# TabsPageSlider

@@ -1,13 +1,19 @@
 <template>
   <div class="home">
-    <slider-page :PageList="TabsList" :TabsList='TabsList'>
+              
+    <slider-page :PageList="TabsList" :TabsList='TabsList' :threshold=0.2>
       <SliderItem>
-        <slider-page :PageList="TabsListt" :TabsList='TabsListt' Nesting>
+        <slider-page :PageList="TabsListt" :TabsList='TabsListt' Nesting :threshold=0.2>
           <SliderItem>
             <div>多啦A梦1</div>
           </SliderItem>
           <SliderItem>
-            <slider-page :PageList="TabsLists" Nesting :TabsList='TabsLists'>
+            <slider-page 
+              :PageList="TabsLists" 
+              Nesting 
+              :TabsList='TabsLists'
+              :threshold=0.1
+              >
               <SliderItem>
                 <div class="dijia" style="width:80%:background:#333">迪迦奥特曼1</div>
               </SliderItem>

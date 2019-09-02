@@ -26,11 +26,19 @@ export default class SliderPage extends Vue {
   get ItemWidth() {
     try {return this.$children[0].$el.offsetWidth; } catch {throw new Error('获取滑块宽度失败'); }
   }
-
+  get activeTab() {
+    // 3 0.1  4 0.2
+    const len = this.TabsList[this.stateInit.index].title.length;
+    const width = 100 / this.TabsList.length * len * this.threshold;
+    const left  = 100 / this.TabsList.length * (1 - (len * this.threshold)) / 2;
+    return `transform:translateX(${-this.move / this.TabsList.length}px);
+            width:${width}%;left:${left}%;
+            `;
+  }
   //  @Prop(Number) public PageSize !: number;
   @Prop(Array) public PageList!: PageListType[];
   @Prop(Array) public TabsList!: TabsListType[];
-
+  @Prop(Number)public threshold!: number;
   @Prop(Boolean) public Nesting !: false;
   public parentSlider: object = {};
   public value: any = 1;
@@ -40,7 +48,7 @@ export default class SliderPage extends Vue {
 
   public startX !: number;
   public startY !: number;
-  private stateInit = {
+  public stateInit = {
     index: 0, // 当前滑块的下标，从0开始
     left: 0, // container的一个left位置
     touch: 0, // 触摸状态 0：未触摸 1：手指触摸/鼠标按下
@@ -234,10 +242,13 @@ export default class SliderPage extends Vue {
           {
             this.TabsList.map((item, index) => {
               return (
-                <div class='tab-item' style={index === this.stateInit.index ? 'color:red;' : ''}>{item.title}</div>
+                <div class='tab-item' style={index === this.stateInit.index ? 'color:red;' : ''}>
+                  {item.title}
+                </div>
               );
             })
           }
+          <div class='tab-active' style={this.activeTab}></div>
         </div>
         <div  style={this.Transation}
               class='container'
