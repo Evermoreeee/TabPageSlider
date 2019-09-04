@@ -1,18 +1,22 @@
 <template>
   <div class="home">
               
-    <slider-page :PageList="TabsList" :TabsList='TabsList' :threshold=0.2>
+    <slider-page :PageList="TabsList" :TabsList='TabsList' :threshold=0.3>
       <SliderItem>
-        <slider-page :PageList="TabsListt" :TabsList='TabsListt' Nesting :threshold=0.2>
+        <slider-page :PageList="TabsListt" :TabsList='TabsListt' Nesting :threshold=0.3>
           <SliderItem>
-            <div>多啦A梦1</div>
+            <scroll :on-refresh="onRefresh" :on-infinite="onInfinite">
+                <div class="duola" v-for="(item,index) in 30" :key="index" @click="hendleClick(index)"> 
+                  多啦A梦{{index}}
+                </div>
+            </scroll>
           </SliderItem>
           <SliderItem>
             <slider-page 
               :PageList="TabsLists" 
               Nesting 
               :TabsList='TabsLists'
-              :threshold=0.1
+              :threshold=0.3
               >
               <SliderItem>
                 <div class="dijia" style="width:80%:background:#333">迪迦奥特曼1</div>
@@ -34,7 +38,9 @@
         </slider-page>
       </SliderItem>
       <SliderItem>
-        <div class="dijia" style="width:80%:background:#333">四大天王2</div>
+        <div class="dijia" style="width:80%:background:#333"> 
+          <FnApi></FnApi>
+        </div>
       </SliderItem>
       <SliderItem>
         <div class="dijia" style="width:80%:background:#333">四大天王3</div>
@@ -54,11 +60,14 @@ interface PageList {
 import { Component, Vue } from 'vue-property-decorator';
 import SliderPage from './lib/sliderPage';
 import SliderItem from './lib/sliderItem';
-
+import scroll from './lib/scroll.vue'
+import FnApi from './lib/FnApi'
 @Component({
   components: {
     SliderPage,
     SliderItem,
+    scroll,
+    FnApi
   },
 })
 export default class Home extends Vue {
@@ -75,10 +84,10 @@ export default class Home extends Vue {
     {title: '黎明'},
   ];
   public TabsListt = [
-    {title: '大熊'},
-    {title: '胖虎'},
+    {title: '大雄'},
+    {title: '胖虎胖虎'},
     {title: '静香'},
-    {title: '小夫'},
+    {title: '夫'},
   ];
   public TabsLists = [
     {title: '迪迦1'},
@@ -88,12 +97,46 @@ export default class Home extends Vue {
   public mounted(): void {
     console.log('mounted');
   }
+  onRefresh(done:Function) {
+        setTimeout(() => {
+          done()
+        }, 1500)
+  }
+  hendleClick(index:Number):void{
+    console.log(index)
+  }
+  onInfinite(done:Function) {
+        setTimeout(() => {
+          done()
+        }, 1500)
+      }
 }
 </script>
-<style lang="stylus">
+<style lang="less">
 .home {
   height: 100%;
   width: 100%;
   background: #fff333;
+  .scroll{
+    // height: 100%;
+    // overflow: hidden;
+    // overflow-y: auto;
+  }
+  .duola{
+    height: 40px;
+    line-height: 40px;
+    background: #fd42c5;
+    border-bottom: 2px solid #333;
+  }
 }
+#app{
+  height: 100%;
+}
+
+body{
+    margin :0 ;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+  }
 </style>

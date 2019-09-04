@@ -29,16 +29,25 @@ export default class SliderPage extends Vue {
   get activeTab() {
     // 3 0.1  4 0.2
     const len = this.TabsList[this.stateInit.index].title.length;
-    const width = 100 / this.TabsList.length * len * this.threshold;
-    const left  = 100 / this.TabsList.length * (1 - (len * this.threshold)) / 2;
+    let threshold = 0.2;
+    if (this.TabsList.length === 4) {
+      threshold = 0.2;
+    } else if (this.TabsList.length === 3) {
+      threshold = 0.1;
+    }
+    const width = 100 / this.TabsList.length * len * threshold;
+    const left  = 100 / this.TabsList.length * (1 - (len * threshold)) / 2;
     return `transform:translateX(${-this.move / this.TabsList.length}px);
             width:${width}%;left:${left}%;
             `;
   }
+  // get move() {
+  //   return this.stateInit.left;
+  // }
   //  @Prop(Number) public PageSize !: number;
   @Prop(Array) public PageList!: PageListType[];
   @Prop(Array) public TabsList!: TabsListType[];
-  @Prop(Number)public threshold!: number;
+  @Prop(Number) public threshold!: number;
   @Prop(Boolean) public Nesting !: false;
   public parentSlider: object = {};
   public value: any = 1;
@@ -116,17 +125,18 @@ export default class SliderPage extends Vue {
     // event.pageX表示当前手指/鼠标所移动的位置
     // 而我们this.states.touchTrack.old表示手指/鼠标的上一个位置
     // 所以可以通过比对来判断是向左滑动还是向右滑动
+    // console.log(event.pageX);
 
     if (event.pageX < this.stateInit.touchTrack.old.pageX) {
       this.stateInit.left -= this.stateInit.touchTrack.old.pageX - event.pageX;
     } else {
       this.stateInit.left += event.pageX - this.stateInit.touchTrack.old.pageX;
     }
-    this.stateInit.touchTrack.old = event;
 
     const $Maxleft = -(this.ItemWidth * (this.PageList.length - 1));
 
     if (this.stateInit.left < 0 && $Maxleft < this.stateInit.left) {
+      // huadong
       this.move = this.stateInit.left;
     } else {
       // throw new Error('越界了');
@@ -135,6 +145,7 @@ export default class SliderPage extends Vue {
         this.parentSlider.touchMove(event);
       }
     }
+    this.stateInit.touchTrack.old = event;
   }
   public touchEnd(event: any): void {
     try {
@@ -147,10 +158,24 @@ export default class SliderPage extends Vue {
     } else {
       // zongxinag
     }
+
     // 移除触摸状态
     this.stateInit.touch = 0;
     event = event.changedTouches ? event.changedTouches[0] : event;
 
+    // let slider = 0;
+    // if (event.pageX < this.stateInit.touchTrack.old.pageX) {
+    //   slider = this.stateInit.left - (this.stateInit.touchTrack.old.pageX - event.pageX);
+    // } else {
+    //   slider = this.stateInit.left + (event.pageX - this.stateInit.touchTrack.old.pageX);
+    // }
+    // console.log(slider);
+    // // 小于滑动阙值,返回
+    // if (slider < this.ItemWidth * this.threshold) {
+    //   console.log('小于滑动阙值');
+    //   this.stateInit.left = -(this.ItemWidth * this.stateInit.index);
+    //   return;
+    // }
     if (event.pageX < this.stateInit.touchTrack.start.pageX) {
       this.stateInit.index++;
     } else {
@@ -170,18 +195,23 @@ export default class SliderPage extends Vue {
         this.parentSlider.touchEnd(event);
       }
     }
+    // console.log(event.pageX );
+
     if (this.direction === 'horizontal') {
       this.change(this.stateInit.index);
     } else {
       // 垂直滚动
       return;
     }
+
   }
   public change(index: number) {
     // 当前滑块的index乘以滑块宽度的相反数即为container的left位置。
     this.stateInit.left = -(this.ItemWidth * index);
-    this.move = this.stateInit.left;
     this.stateInit.index = index;
+
+    this.move = this.stateInit.left;
+
   }
   /**
    * @public 滑动到方向
@@ -207,12 +237,16 @@ export default class SliderPage extends Vue {
     // this.deltaX = 0;
     // this.deltaY = 0;
   }
-
+  public handleTabsClick(index: number) {
+    console.log(index);
+    this.change(index);
+  }
   public mounted(): void {
     // console.log('mounted');
     // 检测是在pc端还是移动端
     let isTouch: boolean;
     isTouch = 'ontouchstart' in window;
+
     // console.log(this);
     // 如过允许嵌套滑动，先找到父类
     if (this.Nesting) {
@@ -235,14 +269,18 @@ export default class SliderPage extends Vue {
     }
   }
   protected render() {
-
+    const that = this;
     return (
-      <div class={style.sliderPage}>
+      <div class={style.sliderPage} ref='sl'>
         <div class='tab-comtainer'>
           {
             this.TabsList.map((item, index) => {
               return (
-                <div class='tab-item' style={index === this.stateInit.index ? 'color:red;' : ''}>
+                <div
+                    class='tab-item'
+                    style={index === this.stateInit.index ? 'color:red;' : ''}
+                    onClick={() => that.handleTabsClick(index)}
+                    >
                   {item.title}
                 </div>
               );
