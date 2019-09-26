@@ -60,14 +60,14 @@ interface PageList {
 import { Component, Vue } from 'vue-property-decorator';
 import SliderPage from './lib/sliderPage';
 import SliderItem from './lib/sliderItem';
-import scroll from './lib/scroll.vue'
-import FnApi from './lib/FnApi'
+import scroll from './lib/scroll.vue';
+import FnApi from './lib/FnApi';
 @Component({
   components: {
     SliderPage,
     SliderItem,
     scroll,
-    FnApi
+    FnApi,
   },
 })
 export default class Home extends Vue {
@@ -97,18 +97,18 @@ export default class Home extends Vue {
   public mounted(): void {
     console.log('mounted');
   }
-  onRefresh(done:Function) {
+  public onRefresh(done: Function) {
         setTimeout(() => {
-          done()
-        }, 1500)
+          done();
+        }, 1500);
   }
-  hendleClick(index:Number):void{
-    console.log(index)
+  public hendleClick(index: Number): void {
+    console.log(index);
   }
-  onInfinite(done:Function) {
+  public onInfinite(done: Function) {
         setTimeout(() => {
-          done()
-        }, 1500)
+          done();
+        }, 1500);
       }
 }
 </script>
